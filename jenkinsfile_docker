@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Check out the code from SCM (git)
+                    // Check out the code from SCM (git). Might not be required
                     // checkout scm
 
                     // Build the Docker image
