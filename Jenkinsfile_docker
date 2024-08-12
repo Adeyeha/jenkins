@@ -15,18 +15,18 @@ pipeline {
     }
 
     stages {
-        stage('Check Docker Daemon') {
-            steps {
-                script {
-                    // Check if Docker is running
-                    def dockerRunning = sh(script: 'docker info > /dev/null 2>&1', returnStatus: true)
-                    if (dockerRunning != 0) {
-                        // If Docker is not running, start it
-                        sh 'systemctl start docker'
-                    }
-                }
-            }
-        }
+        // stage('Check Docker Daemon') {
+        //    steps {
+        //        script {
+        //            // Check if Docker is running
+        //            def dockerRunning = sh(script: 'docker info > /dev/null 2>&1', returnStatus: true)
+        //            if (dockerRunning != 0) {
+        //                // If Docker is not running, start it
+        //                sh 'systemctl start docker'
+        //            }
+        //        }
+        //    }
+        //}
 
         stage('Build Docker Image') {
             steps {
