@@ -1,0 +1,53 @@
+pipeline {
+    agent { 
+        node {
+            label 'docker-agent-docker'
+            }
+      }
+
+    triggers {
+        pollSCM 'H * * * *'
+    }
+
+    environment {
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // This is the ID of the Docker Hub credentials in Jenkins
+        DOCKER_IMAGE_NAME = 'adeyehat/jenkinsdockeragentfromjenkins' // Replace with your Docker Hub username and desired image name
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Check out the code from SCM (git)
+                    // checkout scm
+
+                    // Build the Docker image
+                    sh '''
+                    docker build -t ${DOCKER_IMAGE_NAME}:latest -f agents/docker/Dockerfile .
+                    '''
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    // Use withDockerRegistry to manage Docker Hub credentials
+                    withDockerRegistry([credentialsId: "${DOCKER_CREDENTIALS_ID}", url: '']) {
+                        // Push the Docker image to Docker Hub
+                        sh '''
+                        docker push ${DOCKER_IMAGE_NAME}:latest
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up the Docker environment on the Jenkins agent after the job
+            sh 'docker rmi ${DOCKER_IMAGE_NAME}:latest || true'
+        }
+    }
+}
