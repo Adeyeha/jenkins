@@ -1,0 +1,20 @@
+pipeline {
+    agent {
+        docker {
+            image 'adeyehat/jenkinsdockeragent:latest'
+            // Mount Docker socket to allow Docker commands to interact with the host Docker daemon
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    stages {
+        stage('Run Docker Command') {
+            steps {
+                script {
+                    // Run Docker command to verify installation
+                    sh 'docker run hello-world'
+                }
+            }
+        }
+    }
+}

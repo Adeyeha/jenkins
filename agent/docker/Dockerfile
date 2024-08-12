@@ -75,8 +75,14 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Run Docker Hello World to verify installation
-# RUN service docker start
+# RUN systemctl start docker
 # RUN docker run hello-world
+
+# Enable Docker to start on boot
+# RUN systemctl enable docker
+
+# # Verify Docker is running
+# RUN systemctl status docker
 
 # Create Docker group and add Jenkins user to it
 # RUN groupadd docker && \
