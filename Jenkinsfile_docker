@@ -1,20 +1,33 @@
 pipeline {
-    agent { 
+    agent {
         node {
             label 'docker-agent-docker'
-            }
-      }
+        }
+    }
 
     triggers {
         pollSCM 'H * * * *'
     }
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // This is the ID of the Docker Hub credentials in Jenkins
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials' // Docker Hub credentials ID in Jenkins
         DOCKER_IMAGE_NAME = 'adeyehat/jenkinsdockeragentfromjenkins' // Replace with your Docker Hub username and desired image name
     }
 
     stages {
+        stage('Check Docker Daemon') {
+            steps {
+                script {
+                    // Check if Docker is running
+                    def dockerRunning = sh(script: 'docker info > /dev/null 2>&1', returnStatus: true)
+                    if (dockerRunning != 0) {
+                        // If Docker is not running, start it
+                        sh 'sudo service docker start'
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
