@@ -22,7 +22,7 @@ pipeline {
                     def dockerRunning = sh(script: 'docker info > /dev/null 2>&1', returnStatus: true)
                     if (dockerRunning != 0) {
                         // If Docker is not running, start it
-                        sh 'service docker start'
+                        sh 'systemctl start docker'
                     }
                 }
             }
